@@ -171,6 +171,29 @@ namespace NNTStructure {
         int size() const { return _size; }
         int capacity() const { return _capacity; }
 
+    public: // Iterator
+        struct iterator {
+            using value_type = T;
+            using pointer    = T*;
+            using reference  = T&;
+            iterator(pointer iter) {
+                _iterator = iter;
+            }
+
+            bool operator!=(const reference other) const {
+                return _iterator != other;
+            }
+
+            pointer _iterator;
+        };
+        
+        iterator begin() {
+            return iterator(&_array[0]);
+        }
+        iterator end() {
+            return iterator(&_array[_size]);
+        }
+
     private:
         T *_array = nullptr;
         int _size = 0;
