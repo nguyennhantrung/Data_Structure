@@ -173,6 +173,10 @@ namespace NNTStructure {
 
     public: // Iterator
         struct iterator {
+            // These using declarations are standard practice for C++ iterators
+            using difference_type   = std::ptrdiff_t; // Required for random access iterators
+            using iterator_category = std::random_access_iterator_tag; // Or forward_iterator_tag, etc.
+            
             using value_type = T;
             using pointer    = T*;
             using reference  = T&;
@@ -180,11 +184,43 @@ namespace NNTStructure {
                 _iterator = iter;
             }
 
-            bool operator!=(const reference other) const {
-                return _iterator != other;
+            // Equality operators
+            // This compare the position of element in array, not value
+            // Equality Operators are written as non-member function. 
+            // Therefore, need use friend to be able to access private and protected variable
+            friend bool operator!=(const iterator a, const iterator b) {
+                return a._iterator != b._iterator;
+            }
+            friend bool operator==(const iterator a, const iterator b) {
+                return a._iterator == b._iterator;
             }
 
-            pointer _iterator;
+            // Dereference operator (required for all iterators)
+            // Use "reference | T&" for direect change value.
+            reference operator*() {
+                return *_iterator;
+            }
+
+            // Member access operator (optional but good practice) 
+            pointer operator->() {
+                return _iterator;
+            }
+
+            // Prefix increment operator (++it)
+            // Use iterator& to return changable value of iterator 
+            iterator& operator++() {
+                _iterator ++;   // increase address of pointer (T*)
+                return *this;   // "this" is struct iterator*, "*this" will return value, not pointer.
+            }
+
+            // Postfix increment operator (it++)
+            // The input parameter is a dummy  to differentiate it from the prefix version.
+            iterator operator++(T) {
+                iterator temp = *this;  // Store current value to temp variable
+                ++(*this);              // Call the prefix increment operator to increase current value
+                return temp;            // Return the temp variable
+            }
+            private: pointer _iterator;
         };
         
         iterator begin() {
