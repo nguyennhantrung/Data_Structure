@@ -4,31 +4,68 @@
 namespace NNTStructure {
     template<typename T>
     class SingleLinkedList {
-        public: 
-            template<typename LL>
+        public: // Structure
             struct linkedlist {
                 linkedlist() {
                     _next = nullptr;
                 }
-                linkedlist(const LL& value) {
-                    memcpy(&_value, &value, sizeof(LL));
+                linkedlist(const T& value) {
+                    memcpy(&_value, &value, sizeof(T));
                     _next = nullptr;
                 }
-                linkedlist(const LL& value, linkedlist<LL> *next) {
-                    memcpy(&_value, &value, sizeof(LL));
+                linkedlist(const T& value, linkedlist<T> *next) {
+                    memcpy(&_value, &value, sizeof(T));
                     _next = next;
                 }
-                LL& get() {
+                T& get() {
                     return _value;
                 }
-                linkedlist<LL> *& next() {
+                linkedlist<T> *& next() {
                     return _next;
                 }
-            protected:
-                LL _value;
-                linkedlist<LL> *_next;
+                protected:
+                T _value;
+                linkedlist<T> *_next;
             };
-        public:
+            
+            struct iterator {
+                iterator() {
+                    node = nullptr;
+                }
+                iterator(linkedlist<T>* other) {
+                    node = other;
+                }
+                iterator& operator++() {
+                    if(node == nullptr) 
+                        throw std::out_of_range("nullptr");
+                    if(node->next() == nullptr) 
+                        throw std::out_of_range("nullptr");
+                    node = node->next();
+                    return *this;
+                }
+                iterator operator++(T) {
+                    iterator temp = *this;
+                    ++(*this);
+                    return temp;
+                }
+                linkedlist<T>& operator*() {
+                    return *node;
+                }
+                linkedlist<T>* operator->() {
+                    return node;
+                }
+                friend bool operator==(const iterator& A, const iterator& B) {
+                    return A.node == B.node;
+                }
+                friend bool operator!=(const iterator& A, const iterator& B) {
+                    return A.node == B.node;
+                }
+
+                private:
+                linkedlist<T>* node = nullptr;
+            }
+
+        public: // Common Functions
             SingleLinkedList<T>() {
                 head = nullptr;
                 tail = nullptr;
@@ -60,7 +97,6 @@ namespace NNTStructure {
                 tail = nullptr;
                 _size = 0;
             }
-            // Wrong copy here, should clean up first then create another list
             SingleLinkedList<T>& operator=(const SingleLinkedList<T>& other){
                 // Clean up
                 linkedlist<T>* temp;
@@ -188,7 +224,12 @@ namespace NNTStructure {
                 }
                 _size = _size - 1;
             }
-
+            iterator& begin() {
+                return iterator(head);
+            }
+            iterator& end() {
+                return iterator(tail);
+            }
         private:
             linkedlist<T>* head = nullptr;
             linkedlist<T>* tail = nullptr;

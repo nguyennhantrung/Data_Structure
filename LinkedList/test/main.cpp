@@ -89,14 +89,12 @@ int main() {
     }
     cout << endl;
 
-
-
 // auto iterator
-    // cout << "List Test 9: Auto Iterator\n\t";
-    // for(auto& value: test2) {
-    //     cout << value << " ";
-    // }
-    // cout << endl; 
+    cout << "List Test 9: Auto Iterator\n\t";
+    for(auto& value: test2) {
+        cout << value << " ";
+    }
+    cout << endl; 
 
 
     cout << "End=========================" << endl;
