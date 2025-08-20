@@ -5,7 +5,7 @@ using namespace std;
 
 void show(NNTStructure::Stack<int> ll) {
     for(auto& value : ll) {
-        cout << value.get() << " ";
+        cout << value << " ";
     }
 }
 

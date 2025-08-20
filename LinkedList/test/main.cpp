@@ -92,7 +92,7 @@ int main() {
 // auto iterator
     cout << "List Test 9: Auto Iterator\n\t";
     for(auto& value: test2) {
-        cout << value.get() << " ";
+        cout << value << " ";
     }
     cout << endl; 
 

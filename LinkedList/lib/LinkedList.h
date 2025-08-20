@@ -46,11 +46,11 @@ namespace NNTStructure {
                     ++(*this);
                     return temp;
                 }
-                linkedlist& operator*() {
-                    return *node;
+                T& operator*() {
+                    return node->get();
                 }
-                linkedlist* operator->() {
-                    return node;
+                T* operator->() {
+                    return &(node->get());
                 }
                 friend bool operator==(const iterator& A, const iterator& B) {
                     return A.node == B.node;

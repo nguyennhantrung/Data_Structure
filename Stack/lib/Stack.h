@@ -26,9 +26,6 @@ namespace NNTStructure {
                 next = _next;
                 prev = _prev;
             }
-            T& get() {
-                return _value;
-            }
             T _value;
             LinkedList* next = nullptr;
             LinkedList* prev = nullptr;
@@ -41,11 +38,8 @@ namespace NNTStructure {
             iterator(LinkedList* ll) {
                 node = ll;
             }
-            T& get() {
-                return node->_value;
-            }
-            LinkedList& operator*() { return *node; }
-            LinkedList* operator->() { return node; }
+            T& operator*() { return node->_value; }
+            T* operator->() { return &(node->_value); }
             iterator& operator++() {
                 if (node != nullptr)
                     node = node->prev;
