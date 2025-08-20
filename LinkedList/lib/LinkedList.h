@@ -13,32 +13,30 @@ namespace NNTStructure {
                     memcpy(&_value, &value, sizeof(T));
                     _next = nullptr;
                 }
-                linkedlist(const T& value, linkedlist<T> *next) {
+                linkedlist(const T& value, linkedlist *next) {
                     memcpy(&_value, &value, sizeof(T));
                     _next = next;
                 }
                 T& get() {
                     return _value;
                 }
-                linkedlist<T> *& next() {
+                linkedlist *& next() {
                     return _next;
                 }
                 protected:
                 T _value;
-                linkedlist<T> *_next;
+                linkedlist *_next;
             };
             
             struct iterator {
                 iterator() {
                     node = nullptr;
                 }
-                iterator(linkedlist<T>* other) {
+                iterator(linkedlist* other) {
                     node = other;
                 }
                 iterator& operator++() {
                     if(node == nullptr) 
-                        throw std::out_of_range("nullptr");
-                    if(node->next() == nullptr) 
                         throw std::out_of_range("nullptr");
                     node = node->next();
                     return *this;
@@ -48,22 +46,22 @@ namespace NNTStructure {
                     ++(*this);
                     return temp;
                 }
-                linkedlist<T>& operator*() {
+                linkedlist& operator*() {
                     return *node;
                 }
-                linkedlist<T>* operator->() {
+                linkedlist* operator->() {
                     return node;
                 }
                 friend bool operator==(const iterator& A, const iterator& B) {
                     return A.node == B.node;
                 }
                 friend bool operator!=(const iterator& A, const iterator& B) {
-                    return A.node == B.node;
+                    return A.node != B.node;
                 }
 
                 private:
-                linkedlist<T>* node = nullptr;
-            }
+                linkedlist* node = nullptr;
+            };
 
         public: // Common Functions
             SingleLinkedList<T>() {
@@ -72,7 +70,7 @@ namespace NNTStructure {
                 _size = 0;
             }
             SingleLinkedList<T>(const SingleLinkedList<T>& other) {
-                linkedlist<T> * otherNode = other.head;
+                linkedlist * otherNode = other.head;
                 while(otherNode != nullptr) {
                     append(otherNode->get());
                     otherNode = otherNode->next();   
@@ -88,7 +86,7 @@ namespace NNTStructure {
                 other._size = 0;
             }
             ~SingleLinkedList(){
-                linkedlist<T>* temp;
+                linkedlist* temp;
                 while(head != nullptr) {
                     temp = head;
                     head = head->next();
@@ -99,7 +97,7 @@ namespace NNTStructure {
             }
             SingleLinkedList<T>& operator=(const SingleLinkedList<T>& other){
                 // Clean up
-                linkedlist<T>* temp;
+                linkedlist* temp;
                 while(head != nullptr) {
                     temp = head;
                     head = head->next();
@@ -109,7 +107,7 @@ namespace NNTStructure {
                 head = nullptr;
                 tail = nullptr;
                 // Create copy list
-                linkedlist<T> * otherNode = other.head;
+                linkedlist * otherNode = other.head;
                 while(otherNode != nullptr) {
                     append(otherNode->get());
                     otherNode = otherNode->next();   
@@ -134,7 +132,7 @@ namespace NNTStructure {
                 }
 
                 int i = 0;
-                linkedlist<T>* curr = head;
+                linkedlist* curr = head;
                 while(i < index) {
                     curr = curr->next();
                     i++;
@@ -143,12 +141,12 @@ namespace NNTStructure {
             }
             void append(const T& value) {
                 if(head == nullptr) {
-                    head = new linkedlist<T>(value);
+                    head = new linkedlist(value);
                     tail = head;
                     head->next() = nullptr;
                 }
                 else {
-                    tail->next() = new linkedlist<T>(value);
+                    tail->next() = new linkedlist(value);
                     tail = tail->next();
                     tail->next() = nullptr;
                 }
@@ -159,25 +157,25 @@ namespace NNTStructure {
                     throw std::out_of_range("index out of bounds");
                 }
                 if(index == 0) {
-                    head = new linkedlist<T>(value, head);
+                    head = new linkedlist(value, head);
                 }
                 else if(index == _size) {
-                    tail->next() = new linkedlist<T>(value);
+                    tail->next() = new linkedlist(value);
                     tail = tail->next();
                 }
                 else {
                     int i = 0;
-                    linkedlist<T>* curr = head;
+                    linkedlist* curr = head;
                     while(i < index-1) {
                         curr = curr->next();
                         i++;
                     }
-                    curr->next() = new linkedlist<T>(value, curr->next());
+                    curr->next() = new linkedlist(value, curr->next());
                 }
                 _size = _size + 1;
             }
             void remove(const T& value) {
-                linkedlist<T>* curr = head;
+                linkedlist* curr = head;
                 for(int i = 0; i < _size; i++) {
                     if(curr->get() == value) {
                         removeAt(i);
@@ -196,7 +194,7 @@ namespace NNTStructure {
                         head = nullptr;
                     }
                     else {
-                        linkedlist<T>* curr = head;
+                        linkedlist* curr = head;
                         head = head->next();
                         delete curr;
                         curr = nullptr;
@@ -204,7 +202,7 @@ namespace NNTStructure {
                 }
                 else {
                     int i = 0;
-                    linkedlist<T>* curr = head;
+                    linkedlist* curr = head;
                     while(i < index-1) {
                         curr = curr->next();
                         i++;
@@ -216,7 +214,7 @@ namespace NNTStructure {
                     }
                     else
                     {
-                        linkedlist<T>* temp = curr->next();
+                        linkedlist* temp = curr->next();
                         curr->next() = curr->next()->next();
                         delete temp;
                         temp = nullptr;
@@ -224,15 +222,15 @@ namespace NNTStructure {
                 }
                 _size = _size - 1;
             }
-            iterator& begin() {
+            iterator begin() {
                 return iterator(head);
             }
-            iterator& end() {
-                return iterator(tail);
+            iterator end() {
+                return iterator();
             }
         private:
-            linkedlist<T>* head = nullptr;
-            linkedlist<T>* tail = nullptr;
+            linkedlist* head = nullptr;
+            linkedlist* tail = nullptr;
             int _size = 0;
     };
 };
