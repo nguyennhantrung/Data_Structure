@@ -1,0 +1,1 @@
+g++ -g -o test Program/main.cpp && ./test 
