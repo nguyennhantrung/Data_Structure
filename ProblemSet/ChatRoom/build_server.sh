@@ -1,0 +1,1 @@
+g++ -g -pthread  -o server/server server/main.cpp server/src/*  -L ../lib && ./server/server

@@ -1,0 +1,1 @@
+g++ -g -pthread  -o client/client client/main.cpp client/src/* -L ../lib && ./client/client
