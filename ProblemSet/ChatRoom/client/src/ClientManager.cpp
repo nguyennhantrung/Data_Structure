@@ -32,3 +32,7 @@ bool ClientManager::GetInputMessageFromQueue(std::string& message) {
 int ClientManager::CommandRequest() {
     return 1;
 }
+
+int ClientManager::GetId() {
+    return id;
+}

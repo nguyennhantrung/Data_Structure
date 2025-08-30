@@ -1,1 +1,1 @@
-g++ -g -pthread  -o server/server server/main.cpp server/src/*  -L ../lib && ./server/server
+g++ -g -pthread -o server/server server/main.cpp server/src/*.cpp utils/lib/message.pb.cc -I. -Iutils/lib -lprotobuf && ./server/server

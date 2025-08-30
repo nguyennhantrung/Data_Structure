@@ -4,7 +4,7 @@
 #include <mutex>
 #include <atomic>
 #include "ClientManager.h"
-#include "RawMessageHandler.h"
+#include "MessageHandler.h"
 
 class Transmission {
     private:

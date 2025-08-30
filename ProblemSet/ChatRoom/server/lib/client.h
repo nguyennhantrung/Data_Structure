@@ -6,7 +6,7 @@
 #include <mutex>
 #include <atomic>
 #include <condition_variable>
-
+#include "../../utils/lib/MessageHandler.h"
 class ServerManager;
 
 class Client {
@@ -23,6 +23,7 @@ class Client {
         std::atomic<bool> connected{false};
         ServerManager* serverManager = nullptr;
         std::condition_variable sendCv;
+        MessageHandler * messageHandler = nullptr;
     protected:
         void receive(int socket);
         void send(int socket);

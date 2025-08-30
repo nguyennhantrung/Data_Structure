@@ -2,11 +2,13 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <cstring>
-
+#include "../lib/RawMessageHandler.h"
+#include "../lib/ProtobufMessageHandler.h"
 
 Transmission::Transmission(ClientManager* manager, int sock) {
     clientManager = manager;
-    messageHandler = new RawMessageHandler();
+    // messageHandler = new RawMessageHandler();
+    messageHandler = new ProtobufMessageHandler();
     server = sock;
 };
 Transmission::~Transmission() {
@@ -26,8 +28,10 @@ void Transmission::SendToSever() {
         if(clientManager->GetInputMessageFromQueue(message))
         {
             string encodedMessage;
-            messageHandler->decode(message, encodedMessage);
-            ::send(server, encodedMessage.c_str(), encodedMessage.length(), 0);
+            if (messageHandler->encode(message, clientManager->GetId(), false, encodedMessage) == 0)
+                ::send(server, encodedMessage.c_str(), encodedMessage.length(), 0);
+            else 
+                LOG("Failed To encode and send message");
         }
     }
 }
@@ -49,6 +53,12 @@ void Transmission::ReceiveFromServer() {
 
 int Transmission::PrintOutMessageFromServer(const std::string& message) {
     string decodedMessage;
-    messageHandler->decode(message, decodedMessage);
+    bool command = false;
+    int id = -1;
+    messageHandler->decode(message, id, command, decodedMessage);
+    if(command == false) {
+        std::cout << "[id] >"  << decodedMessage << std::endl;
+    }
+    // TODO: Handle command here
     return 0;
 }

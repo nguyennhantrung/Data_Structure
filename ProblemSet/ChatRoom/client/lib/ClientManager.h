@@ -7,6 +7,7 @@ class Transmission;
 
 class ClientManager {
     private:
+    int id = -1;
     Transmission* transmission = nullptr;
     InputTerminal* inputTerminal = nullptr;
     std::queue<std::string> inputMessage;
@@ -14,7 +15,7 @@ class ClientManager {
     public:
     ClientManager();
     ~ClientManager();
-
+    int GetId();
     int AddServer(int socket) ;
     int AddInputMessageToQueue(const std::string& message);
     bool GetInputMessageFromQueue(std::string& message);

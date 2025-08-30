@@ -1,5 +1,6 @@
 #include "../lib/client.h"
 #include "../lib/ServerManager.h"
+#include "../../utils/lib/ProtobufMessageHandler.h"
 
 #include <iostream>
 #include <cstring>
@@ -17,11 +18,18 @@ void Client::receive(int socket) {
             break;
         }
         std::string receivedMessage(buffer, valread);
+        int id = -1;
+        bool command = false;
+        std::string decodedMessage;
+        messageHandler->decode(receivedMessage, id, command, decodedMessage);
+        if(command == false)
         {
             std::lock_guard<std::mutex> lck(receiveMutex);
-            receiveMsgQueue.push(receivedMessage);
+            receiveMsgQueue.push(decodedMessage);
         }
+
         serverManager->NotifyMessageArrived(Client::_id);
+        // TODO: change Client::_id into id from message
         
         memset(buffer, 0, sizeof(buffer));
 
@@ -49,7 +57,12 @@ void Client::send(int socket) {
         }
 
         // Send the message outside the mutex lock
-        ::send(socket, sendingMsg.c_str(), sendingMsg.length(), 0);
+        // TODO: update id for message
+        int id = -1;
+        bool command  = false;
+        string encodedMessage;
+        if(messageHandler->encode(sendingMsg, id, command, encodedMessage) == 0)
+            ::send(socket, encodedMessage.c_str(), encodedMessage.length(), 0);
     }
 }
 
@@ -57,6 +70,7 @@ Client::Client(int id, int socket, ServerManager* manager): _id(id), _socket(soc
     connected.store(true); 
     receiveThread = std::thread(&Client::receive, this, socket);
     sendThread = std::thread(&Client::send, this, socket);
+    messageHandler = new ProtobufMessageHandler();
 }
 Client::~Client() {
     connected = false;
