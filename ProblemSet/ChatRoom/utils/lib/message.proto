@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// This is the message we'll use for both sending and receiving
+// a chat message between a client and a server.
+message ChatMessage {
+    // A unique identifier for the user.
+    int32 user_id = 1;
+
+    // A flag to indicate if the message is a system notification.
+    bool command = 2;
+
+    // The actual content of the message.
+    string content = 3;
+}
