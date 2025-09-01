@@ -1,6 +1,6 @@
 #pragma once 
 
-#include "log.h"
+#include "Log.h"
 #include "ClientManager.h"
 #include <arpa/inet.h>
 
@@ -16,4 +16,5 @@ class ClientConnection {
         ClientConnection(ClientManager* manager);
         ~ClientConnection();
         int ConnectToServer();
+        int ReConnectToServer();
 };

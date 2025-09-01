@@ -1,4 +1,4 @@
-#include "../lib/connection.h"
+#include "../lib/Connection.h"
 
 #include <sys/socket.h> // for socket
 #include <unistd.h>     // For close

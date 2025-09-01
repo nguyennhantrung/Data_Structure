@@ -1,12 +1,14 @@
-#include "../lib/input.h" 
+#include "../lib/Input.h" 
+#include "../lib/Log.h" 
 #include <iostream>
 #include <thread>
 #include <mutex>
 #include <atomic>
 
 
-InputTerminal::InputTerminal(ClientManager* manager) {
+InputTerminal::InputTerminal(ClientManager* manager, MessageHandler* handler) {
     clientManager = manager;
+    messageHandler = handler;
     inputTerminalThreadRunning.store(false);
 }
 InputTerminal::~InputTerminal() {
@@ -23,13 +25,8 @@ void InputTerminal::run(){
     pthread_setname_np(pthread_self(), "InputTerminalThread");
     while(inputTerminalThreadRunning) {
         std::string message;
-        std::cout << ">: ";
+        LOG_INPUT;
         std::getline(std::cin, message);
-        if(message[0] == '/') { // command
-            // TODO: Add handle command here
-        }
-        else { // send message
-            clientManager->AddInputMessageToQueue(message);
-        }
+        messageHandler->AddToConsoleQueue(message);
     }
 }

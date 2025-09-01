@@ -2,7 +2,7 @@
 
 #include <netinet/in.h> // for struct of socket
 #include <thread>
-#include "log.h"
+#include "Log.h"
 #include "ServerManager.h"
 
 class ServerConnection {

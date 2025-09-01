@@ -2,37 +2,50 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-#include "../lib/input.h"
-#include "../lib/transmission.h"
+#include "../lib/Input.h"
+#include "../lib/Connection.h"
+#include "../lib/Transmission.h"
+#include "../lib/MessageHandler.h"
 
 ClientManager::ClientManager() {
-    inputTerminal = new InputTerminal(this);
+    clientConnection = new ClientConnection(this);
+    messageHandler = new MessageHandler(this);
+    inputTerminal = new InputTerminal(this, messageHandler);
     inputTerminal->StartInputTerminal();
 }
 ClientManager::~ClientManager() {
+    if(inputTerminal != nullptr) {
+        delete inputTerminal;
+        inputTerminal = nullptr;
+    }
+}
+
+int ClientManager::Start() {
+    return clientConnection->ConnectToServer();
 }
 
 int ClientManager::AddServer(int socket) {
-    transmission = new Transmission(this, socket);
+    transmission = new Transmission(this, messageHandler, socket);
     transmission->Start();
     return 0;
 }
-int ClientManager::AddInputMessageToQueue(const std::string& message) {
-    lock_guard<mutex> lock(inputMutex);
-    inputMessage.push(message);
-    return 0;
+
+int ClientManager::ServerDisconnect() {
+    if(transmission != nullptr) {
+        delete transmission;
+        transmission = nullptr;
+    }
+    return clientConnection->ReConnectToServer();
 }
-bool ClientManager::GetInputMessageFromQueue(std::string& message) {
-    if(inputMessage.empty())    return 0;
-    lock_guard<mutex> lock(inputMutex);
-    message = std::move(inputMessage.front());
-    inputMessage.pop();
-    return 1;
-}
-int ClientManager::CommandRequest() {
-    return 1;
+
+Transmission* ClientManager::GetTransmission() const {
+    return transmission;
 }
 
 int ClientManager::GetId() {
     return id;
+}
+
+void ClientManager::SetId(const int& _id) {
+    id = _id;
 }

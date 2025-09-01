@@ -6,7 +6,7 @@
 #include <mutex>
 #include <atomic>
 #include <condition_variable>
-#include "../../utils/lib/MessageHandler.h"
+#include "MessageHandler.h"
 class ServerManager;
 
 class Client {
@@ -28,7 +28,7 @@ class Client {
         void receive(int socket);
         void send(int socket);
     public:
-        Client(int id, int socket, ServerManager* manager);
+        Client(int id, int socket, ServerManager* manager, MessageHandler* handler);
         ~Client() ;
         int EnqueueMessage (std::string sendingMsg);
         std::string DequeueMessage();
