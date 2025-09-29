@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARM Architecture: AArch32 vs AArch64</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .gradient-text {
+            background: linear-gradient(45deg, #0a9396, #94d2bd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .icon-placeholder {
+            font-size: 2rem;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body class="text-[#212529]">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+
+        <header class="text-center my-8 md:my-16">
+            <h1 class="text-4xl md:text-6xl font-black tracking-tight text-[#005f73]">The Leap to 64-Bit</h1>
+            <p class="mt-4 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">A visual guide to the evolution of ARM architecture from the 32-bit AArch32 to the powerful 64-bit AArch64, exploring the revolutionary changes in design, performance, and security.</p>
+        </header>
+
+        <main class="space-y-16">
+
+            <section id="architecture-shift">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl md:text-4xl font-bold gradient-text">A Fundamental Shift in Architecture</h2>
+                    <p class="mt-2 text-gray-500 max-w-2xl mx-auto">The move to AArch64 was more than just doubling the bit-width; it redefined the architecture's capabilities, enabling access to vastly more memory and introducing a cleaner, more efficient instruction set.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 text-center border-t-4 border-[#0a9396]">
+                        <h3 class="text-2xl font-bold text-[#005f73]">AArch32</h3>
+                        <p class="text-6xl md:text-7xl font-black text-[#ca6702] my-4">4 GB</p>
+                        <p class="font-semibold text-lg text-gray-700">Maximum Addressable Memory</p>
+                        <p class="mt-4 text-gray-500">Powered early smartphones and embedded systems, but was limited by its 32-bit address space. It utilized the A32 and T32 (Thumb) instruction sets for flexibility.</p>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 text-center border-t-4 border-[#94d2bd]">
+                        <h3 class="text-2xl font-bold text-[#005f73]">AArch64</h3>
+                        <p class="text-6xl md:text-7xl font-black text-[#ee9b00] my-4">16 GB</p>
+                        <p class="font-semibold text-lg text-gray-700">Maximum Addressable Memory</p>
+                        <p class="mt-4 text-gray-500">Designed for modern computing, supporting virtually limitless memory. It introduced the streamlined A64 instruction set, retiring the complexity of switching between ARM and Thumb modes.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="registers">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl md:text-4xl font-bold gradient-text">The CPU's Toolbox: A Revolution in Registers</h2>
+                    <p class="mt-2 text-gray-500 max-w-2xl mx-auto">AArch64 not only doubles the width of registers but also nearly doubles their counter, providing compilers more room to optimize code and boost performance.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                    <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                        <h3 class="text-xl font-bold text-center text-[#005f73] mb-4">More Room to Work: General Purpose Registers</h3>
+                        <div class="chart-container">
+                            <canvas id="gprChart"></canvas>
+                        </div>
+                        <p class="mt-4 text-gray-600 text-sm">The significant increase from 16 to 31 general-purpose registers allows more data to be held directly on the CPU, reducing memory access and improving speed. This is a key advantage for complex calculations and function calls.</p>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                         <h3 class="text-xl font-bold text-center text-[#005f73] mb-6">Smarter Access: The Xn/Wn Naming System</h3>
+                        <div class="w-full max-w-md mx-auto">
+                           <div class="bg-gray-100 border-2 border-[#94d2bd] rounded-lg p-4">
+                                <p class="text-center font-bold text-lg text-[#005f73]">Register X0 (64-bit)</p>
+                                <div class="flex mt-2 text-sm">
+                                    <div class="w-1/2 bg-[#0a9396] text-white p-2 rounded-l-md text-center">
+                                        <p class="font-mono">Upper 32 bits</p>
+                                        <p class="font-bold">[63:32]</p>
+                                    </div>
+                                    <div class="w-1/2 bg-[#e9d8a6] text-[#212529] p-2 rounded-r-md text-center border-2 border-dashed border-[#ca6702]">
+                                        <p class="font-mono font-bold">Lower 32 bits</p>
+                                        <p class="font-bold">[31:0]</p>
+                                        <p class="font-semibold">(Accessed as W0)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mt-6 text-gray-600 text-sm">AArch64 introduces a clever system for backward compatibility and efficiency. The `Wn` registers are not separate; they are simply named aliases for the lower 32 bits of the full 64-bit `Xn` registers. When a `Wn` register is written to, the upper 32 bits of the corresponding `Xn` register are automatically zeroed out.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="privilege-levels">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl md:text-4xl font-bold gradient-text">New Rules for Security & Privilege</h2>
+                    <p class="mt-2 text-gray-500 max-w-2xl mx-auto">AArch32's complex system of processor modes was replaced by a clear, hierarchical set of Exception Levels in AArch64, providing a robust foundation for virtualization and security.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                    <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                        <h3 class="text-xl font-bold text-center text-[#005f73] mb-4">AArch32: A Flat System of Modes</h3>
+                         <div class="space-y-3 mt-6">
+                            <div class="bg-[#0a9396] text-white p-3 rounded-lg text-center font-semibold">Privileged Modes (SVC, IRQ, FIQ...)</div>
+                            <div class="flex justify-center text-3xl text-gray-400">↓</div>
+                            <div class="bg-gray-200 p-3 rounded-lg text-center font-semibold">Unprivileged Mode (User)</div>
+                        </div>
+                        <p class="mt-4 text-gray-600 text-sm">AArch32 used a collection of distinct modes for handling different system events. While effective, this model was not inherently designed for the hardware virtualization required by modern cloud and mobile platforms.</p>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                        <h3 class="text-xl font-bold text-center text-[#005f73] mb-4">AArch64: A Hierarchy of Exception Levels</h3>
+                        <div class="relative w-full max-w-xs mx-auto mt-6 space-y-1 text-center font-bold text-white">
+                            <div class="bg-[#005f73] p-2 rounded-t-lg">EL3: Secure Monitor</div>
+                            <div class="bg-[#0a9396] p-2">EL2: Hypervisor</div>
+                            <div class="bg-[#94d2bd] text-[#212529] p-2">EL1: OS Kernel</div>
+                            <div class="bg-[#e9d8a6] text-[#212529] p-2 rounded-b-lg">EL0: Applications</div>
+                        </div>
+                         <p class="mt-4 text-gray-600 text-sm">The tiered Exception Level model is a cornerstone of AArch64. It creates a clear hierarchy of privilege, with the crucial addition of EL2, a dedicated level for the Hypervisor to manage virtual machines efficiently and securely.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="instruction-types">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl md:text-4xl font-bold gradient-text">The Language of the CPU</h2>
+                    <p class="mt-2 text-gray-500 max-w-2xl mx-auto">While the instruction set was refined in AArch64, the fundamental principles of RISC architecture remain. Operations are divided into three core categories.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
+                        <div class="icon-placeholder text-[#0a9396]">⚙️</div>
+                        <h3 class="text-xl font-bold mt-2 text-[#005f73]">Data Processing</h3>
+                        <p class="mt-2 text-gray-600 text-sm">The workhorses of calculation. These instructions (ADD, SUB, AND) perform all arithmetic and logical operations, but can only work on data already present in the CPU's registers.</p>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
+                        <div class="icon-placeholder text-[#ee9b00]">📦</div>
+                        <h3 class="text-xl font-bold mt-2 text-[#005f73]">Load/Store</h3>
+                        <p class="mt-2 text-gray-600 text-sm">The most frequent operations in any program. These instructions (LDR, STR) are solely responsible for moving data between the fast CPU registers and the much larger main memory.</p>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
+                        <div class="icon-placeholder text-[#ae2012]">🔀</div>
+                        <h3 class="text-xl font-bold mt-2 text-[#005f73]">Branch</h3>
+                        <p class="mt-2 text-gray-600 text-sm">The decision-makers. Branch instructions (B, BL) change the program's flow of execution by modifying the Program Counter, enabling loops, functions, and conditional logic (if/then/else).</p>
+                    </div>
+                </div>
+                <div class="mt-12 bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                     <h3 class="text-xl font-bold text-center text-[#005f73] mb-4">Conceptual Workload of a RISC CPU</h3>
+                     <div class="chart-container h-64 md:h-72">
+                        <canvas id="workloadChart"></canvas>
+                     </div>
+                     <p class="mt-4 text-gray-600 text-sm text-center max-w-xl mx-auto">In a typical RISC architecture like ARM, the majority of instructions executed are Load/Store operations. Because calculations can only happen on registers, data is constantly being moved in and out of memory, highlighting the importance of an efficient memory subsystem.</p>
+                </div>
+            </section>
+        </main>
+
+        <footer class="text-center mt-16 py-8 border-t">
+            <p class="text-gray-500 text-sm">&copy; 2025 ARM Architecture Overview. All data derived from ARMv7 and ARMv8 architectural specifications.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        const tooltipPlugin = {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                                return label.join(' ');
+                            } else {
+                                return label;
+                            }
+                        }
+                    }
+                },
+                legend: {
+                    display: false
+                }
+            }
+        };
+
+        const gprChartCtx = document.getElementById('gprChart').getContext('2d');
+        new Chart(gprChartCtx, {
+            type: 'bar',
+            data: {
+                labels: ['AArch32', 'AArch64'],
+                datasets: [{
+                    label: 'Number of General Purpose Registers',
+                    data: [16, 31],
+                    backgroundColor: ['#0a9396', '#94d2bd'],
+                    borderColor: ['#005f73', '#0a9396'],
+                    borderWidth: 2,
+                    borderRadius: 8,
+                }]
+            },
+            options: {
+                ...tooltipPlugin,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#e2e8f0',
+                        },
+                         ticks: {
+                            font: {
+                                weight: '600'
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        const workloadChartCtx = document.getElementById('workloadChart').getContext('2d');
+        new Chart(workloadChartCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Load/Store', 'Data Processing', 'Branch'],
+                datasets: [{
+                    label: 'Conceptual CPU Workload',
+                    data: [60, 25, 15],
+                    backgroundColor: [
+                        '#ee9b00',
+                        '#0a9396',
+                        '#ca6702'
+                    ],
+                    borderColor: '#f8f9fa',
+                    borderWidth: 4,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                     tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) {
+                                    return label.join(' ');
+                                } else {
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                size: 12,
+                                weight: '600'
+                            },
+                            padding: 20,
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
